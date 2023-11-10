@@ -3,6 +3,9 @@
 
 #include "MainCharacter.h"
 
+#include "EnhancedInputComponent.h"
+#include "EnhancedInputSubsystems.h"
+
 // Sets default values
 AMainCharacter::AMainCharacter()
 {
@@ -16,6 +19,16 @@ void AMainCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	if (APlayerController* PlayerController = Cast<APlayerController>(Controller))
+	{
+		if (UEnhancedInputLocalPlayerSubsystem* InputSystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
+		{
+			if (InputMapping)
+			{
+				InputSystem->AddMappingContext(InputMapping, 0);
+			}
+		}
+	}
 }
 
 // Called every frame
@@ -30,22 +43,30 @@ void AMainCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
-	PlayerInputComponent->BindAxis(TEXT("MoveForward"), this, &AMainCharacter::MoveForward);
-	PlayerInputComponent->BindAxis(TEXT("MoveRight"), this, &AMainCharacter::MoveRight);
-	PlayerInputComponent->BindAxis(TEXT("LookUp"), this, &APawn::AddControllerPitchInput);
-	PlayerInputComponent->BindAxis(TEXT("LookRight"), this, &APawn::AddControllerYawInput);
+	if (UEnhancedInputComponent* Input = CastChecked<UEnhancedInputComponent>(PlayerInputComponent))
+	{
+		Input->BindAction(MoveInputAction, ETriggerEvent::Triggered, this, &AMainCharacter::Move);
+		Input->BindAction(LookInputAction, ETriggerEvent::Triggered, this, &AMainCharacter::Look);
+	}
 
-	PlayerInputComponent->BindAction(TEXT("Jump"), EInputEvent::IE_Pressed, this, &ACharacter::Jump);
+	//PlayerInputComponent->BindAction(TEXT("Jump"), EInputEvent::IE_Pressed, this, &ACharacter::Jump);
 }
 
-void AMainCharacter::MoveForward(float AxisValue)
+void AMainCharacter::Move(const FInputActionValue& Value)
 {
-	AddMovementInput(GetActorForwardVector() * AxisValue);
+	const FVector2D AxisValue = Value.Get<FVector2D>();
+
+	if (Controller && AxisValue.Y != 0.f || AxisValue.X != 0.f)
+	{
+		AddMovementInput(GetActorForwardVector(), AxisValue.Y);
+		AddMovementInput(GetActorRightVector(), AxisValue.X);
+	}
 }
 
-void AMainCharacter::MoveRight(float AxisValue)
+void AMainCharacter::Look(const FInputActionValue& Value)
 {
-	AddMovementInput(GetActorRightVector() * AxisValue);
+	const FVector2D AxisValue = Value.Get<FVector2D>();
+
+	AddControllerPitchInput(AxisValue.Y);
+	AddControllerYawInput(AxisValue.X);
 }
-
-

@@ -6,6 +6,11 @@
 #include "GameFramework/Character.h"
 #include "MainCharacter.generated.h"
 
+class UInputMappingContext;
+class UInputAction;
+
+struct FInputActionValue;
+
 UCLASS()
 class MAZEOFNIGHTMARES_API AMainCharacter : public ACharacter
 {
@@ -19,8 +24,14 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
-	float RotationRate = 10.f;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
+	UInputMappingContext* InputMapping;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
+	UInputAction* MoveInputAction;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
+	UInputAction* LookInputAction;
 
 public:	
 	// Called every frame
@@ -30,6 +41,6 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 private:
-	void MoveForward(float AxisValue);
-	void MoveRight(float AxisValue);
+	void Move(const FInputActionValue& Value);
+	void Look(const FInputActionValue& Value);
 };
