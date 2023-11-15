@@ -20,12 +20,24 @@ public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 protected:
+	virtual void BeginPlay();
+
 	UPROPERTY(EditAnywhere)
 	FName AcceptableActorTag = "None";
 
 private:
 	AActor* GetAcceptableActor();
 
-	UPROPERTY(EditDefaultsOnly)
+	UPROPERTY(EditDefaultsOnly, Category = "UI")
 	TSubclassOf<class UUserWidget> ScreamerClass;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Sounds")
+	USoundBase* ScreamerSound;
+
+	void CheckOverlapping();
+
+	FTimerHandle DestroyComponentTimer;
+
+	UFUNCTION()
+	void DestroyActorComponents(UUserWidget* ScreamerParam, USoundBase* ScreamerSoundParam);
 };
