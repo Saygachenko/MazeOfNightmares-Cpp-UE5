@@ -8,6 +8,7 @@
 
 class UInputMappingContext;
 class UInputAction;
+class UCameraShakeBase;
 
 struct FInputActionValue;
 
@@ -45,10 +46,10 @@ private:
 	UInputAction* JumpInputAction;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Camera")
-	TSubclassOf<class UCameraShakeBase> IdleCameraShake;
+	TSubclassOf<UCameraShakeBase> IdleCameraShake;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Camera")
-	TSubclassOf<class UCameraShakeBase> RunCameraShake;
+	TSubclassOf<UCameraShakeBase> RunCameraShake;
 
 	void Move(const FInputActionValue& Value);
 	void Look(const FInputActionValue& Value);

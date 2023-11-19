@@ -39,5 +39,5 @@ private:
 	FTimerHandle SreamerHandle;
 
 	UFUNCTION()
-	void RemoveSreamerComponents(UUserWidget* SreamerParams);
+	void RemoveSreamerComponents(UUserWidget* SreamerParams, AActor* OtherActorParams, APlayerController* ControllerParams);
 };

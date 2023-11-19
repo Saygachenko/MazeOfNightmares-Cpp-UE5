@@ -36,6 +36,7 @@ void AMONScreamer::OnBoxBeginOverlap(UPrimitiveComponent* OverlapComp, AActor* O
 	APlayerController* Controller = GetWorld()->GetFirstPlayerController();
 	if (Controller)
 	{
+		OtherActor->DisableInput(Controller);
 		UUserWidget* Screamer = CreateWidget(Controller, ScreamerClass);
 		if (Screamer)
 		{
@@ -43,9 +44,9 @@ void AMONScreamer::OnBoxBeginOverlap(UPrimitiveComponent* OverlapComp, AActor* O
 			if (ScreamerSound)
 			{
 				UGameplayStatics::SpawnSoundAtLocation(this, ScreamerSound, GetActorLocation());
-				
+
 				FTimerDelegate Delegate;
-				Delegate.BindUFunction(this, "RemoveSreamerComponents", Screamer);
+				Delegate.BindUFunction(this, "RemoveSreamerComponents", Screamer, OtherActor, Controller);
 
 				GetWorld()->GetTimerManager().SetTimer(SreamerHandle, Delegate, 4.5f, false);
 			}
@@ -53,11 +54,13 @@ void AMONScreamer::OnBoxBeginOverlap(UPrimitiveComponent* OverlapComp, AActor* O
 	}
 }
 
-void AMONScreamer::RemoveSreamerComponents(UUserWidget* SreamerParams)
+void AMONScreamer::RemoveSreamerComponents(UUserWidget* SreamerParams, AActor* OtherActorParams, APlayerController* ControllerParams)
 {
 	SreamerParams->RemoveFromViewport();
 
 	GetWorld()->GetTimerManager().ClearTimer(SreamerHandle);
 
 	this->Destroy();
+
+	OtherActorParams->EnableInput(ControllerParams);
 }
