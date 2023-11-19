@@ -39,5 +39,5 @@ private:
 	FTimerHandle SreamerHandle;
 
 	UFUNCTION()
-	void RemoveSreamerComponents(UUserWidget* SreamerParams, USoundBase* ScreamerSoundParams);
+	void RemoveSreamerComponents(UUserWidget* SreamerParams);
 };

@@ -24,18 +24,6 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
-	UInputMappingContext* InputMapping;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
-	UInputAction* MoveInputAction;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
-	UInputAction* LookInputAction;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
-	UInputAction* JumpInputAction;
-
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -44,6 +32,24 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 private:
+	UPROPERTY(EditAnywhere, Category = "Input")
+	UInputMappingContext* InputMapping;
+
+	UPROPERTY(EditAnywhere, Category = "Input")
+	UInputAction* MoveInputAction;
+
+	UPROPERTY(EditAnywhere, Category = "Input")
+	UInputAction* LookInputAction;
+
+	UPROPERTY(EditAnywhere, Category = "Input")
+	UInputAction* JumpInputAction;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Camera")
+	TSubclassOf<class UCameraShakeBase> IdleCameraShake;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Camera")
+	TSubclassOf<class UCameraShakeBase> RunCameraShake;
+
 	void Move(const FInputActionValue& Value);
 	void Look(const FInputActionValue& Value);
 };

@@ -45,7 +45,7 @@ void AMONScreamer::OnBoxBeginOverlap(UPrimitiveComponent* OverlapComp, AActor* O
 				UGameplayStatics::SpawnSoundAtLocation(this, ScreamerSound, GetActorLocation());
 				
 				FTimerDelegate Delegate;
-				Delegate.BindUFunction(this, "RemoveSreamerComponents", Screamer, ScreamerSound);
+				Delegate.BindUFunction(this, "RemoveSreamerComponents", Screamer);
 
 				GetWorld()->GetTimerManager().SetTimer(SreamerHandle, Delegate, 4.5f, false);
 			}
@@ -53,7 +53,7 @@ void AMONScreamer::OnBoxBeginOverlap(UPrimitiveComponent* OverlapComp, AActor* O
 	}
 }
 
-void AMONScreamer::RemoveSreamerComponents(UUserWidget* SreamerParams, USoundBase* ScreamerSoundParams)
+void AMONScreamer::RemoveSreamerComponents(UUserWidget* SreamerParams)
 {
 	SreamerParams->RemoveFromViewport();
 

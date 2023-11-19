@@ -6,6 +6,7 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 
+
 // Sets default values
 AMainCharacter::AMainCharacter()
 {
@@ -17,9 +18,9 @@ AMainCharacter::AMainCharacter()
 // Called when the game starts or when spawned
 void AMainCharacter::BeginPlay()
 {
-	Super::BeginPlay();
-	
-	if (APlayerController* PlayerController = Cast<APlayerController>(Controller))
+	Super::BeginPlay();	
+
+	if (APlayerController* PlayerController = GetWorld()->GetFirstPlayerController())
 	{
 		if (UEnhancedInputLocalPlayerSubsystem* InputSystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
 		{
@@ -36,6 +37,15 @@ void AMainCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	APlayerController* PlayerController = GetWorld()->GetFirstPlayerController();
+	if (PlayerController && GetVelocity().Length() <= 300.f)
+	{
+		PlayerController->ClientStartCameraShake(IdleCameraShake);
+	}
+	else
+	{
+		PlayerController->ClientStartCameraShake(RunCameraShake);
+	}
 }
 
 // Called to bind functionality to input
